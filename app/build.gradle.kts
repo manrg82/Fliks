@@ -2,16 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
     namespace = "com.fliks"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.fliks"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -49,6 +50,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.lint)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,4 +58,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.0.1")
+    implementation("io.github.jan-tennert.supabase:auth-kt:3.0.1")
+    implementation("io.github.jan-tennert.supabase:storage-kt:3.0.1")
+    implementation("io.ktor:ktor-client-android:3.0.1")
+    implementation("io.ktor:ktor-client-core:2.3.9")
+    implementation("io.ktor:ktor-client-android:2.3.9")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.9")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }

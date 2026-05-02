@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Fliks</string>
+    <string name="title_activity_supabase_client">SupabaseClient</string>
+    <string name="title_activity_autentificacion_view_model">AutentificacionViewModel</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_registro">RegistroActivity</string>
+    <string name="title_activity_pelicula">Pelicula</string>
+    <string name="title_activity_detalle">DetalleActivity</string>
+    <string name="title_activity_perfil">PerfilActivity</string>
+    <string name="title_activity_pelicula_tmdb">PeliculaTMDB</string>
+    <string name="title_activity_movies_view_model">MoviesViewModel</string>
 </resources>
