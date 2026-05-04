@@ -49,7 +49,6 @@ class LoginActivity : ComponentActivity() {
         var contrasena by remember { mutableStateOf("") }
         var contrasenaVisible by remember { mutableStateOf(false) }
 
-        // Colores del diseño Glassmorphism
         val azulFondo = Color(0xFF001220)
         val azulBrillante = Color(0xFF007BFF)
         val azulBorde = Color(0xFF326691)
@@ -57,7 +56,7 @@ class LoginActivity : ComponentActivity() {
         LaunchedEffect(viewModel.exitoLogin) {
             if (viewModel.exitoLogin) {
                 val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
-                    putExtra("USUARIO_EMAIL", correo)
+                    putExtra("USUARIO_EMAIL", viewModel.emailUsuario)
                 }
                 startActivity(intent)
                 finish()
@@ -79,7 +78,6 @@ class LoginActivity : ComponentActivity() {
                     )
                 )
         ) {
-            // Brillo detrás del logo
             Box(
                 modifier = Modifier
                     .size(300.dp)

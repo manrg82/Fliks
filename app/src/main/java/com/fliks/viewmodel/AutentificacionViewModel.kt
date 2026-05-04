@@ -8,26 +8,41 @@ import androidx.lifecycle.viewModelScope
 import com.fliks.data.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
     private val supabase = SupabaseClient.client
+
     var cargando by mutableStateOf(false)
         private set
+
     var exitoLogin by mutableStateOf(false)
         private set
+
     var mensajeError by mutableStateOf<String?>(null)
         private set
+
+    var emailUsuario by mutableStateOf("")
+        private set
+
     init {
         comprobarSesionActual()
     }
 
     private fun comprobarSesionActual() {
-        val sesion = supabase.auth.currentSessionOrNull()
-        if (sesion != null) {
-            exitoLogin = true
+        viewModelScope.launch {
+            supabase.auth.sessionStatus.collect { status ->
+                if (status is SessionStatus.Authenticated) {
+                    emailUsuario = status.session.user?.email ?: "Usuario"
+                    exitoLogin = true
+                } else if (status is SessionStatus.NotAuthenticated) {
+                    exitoLogin = false
+                }
+            }
         }
     }
+
     fun iniciarSesion(correo: String, contrasena: String) {
         if (correo.isBlank() || contrasena.isBlank()) {
             mensajeError = "No puedes dejar campos vacíos"
@@ -41,6 +56,7 @@ class AuthViewModel : ViewModel() {
                     email = correo
                     password = contrasena
                 }
+                emailUsuario = correo
                 exitoLogin = true
             } catch (e: Exception) {
                 mensajeError = cuandoFallaElAuth(e)
@@ -49,6 +65,7 @@ class AuthViewModel : ViewModel() {
             }
         }
     }
+
     fun registrarCuenta(correo: String, contrasena: String) {
         if (correo.isBlank() || contrasena.length < 6) {
             mensajeError = "El correo es obligatorio y la clave debe tener 6+ letras"
@@ -63,6 +80,7 @@ class AuthViewModel : ViewModel() {
                     email = correo
                     password = contrasena
                 }
+                emailUsuario = correo
                 exitoLogin = true
             } catch (e: Exception) {
                 mensajeError = "Error al crear cuenta: ${e.localizedMessage}"
@@ -71,14 +89,27 @@ class AuthViewModel : ViewModel() {
             }
         }
     }
+
     fun limpiarError() {
         mensajeError = null
     }
+
     private fun cuandoFallaElAuth(e: Exception): String {
         return when {
             e.message?.contains("Invalid login credentials", true) == true -> "Correo o contraseña incorrectos"
             e.message?.contains("network", true) == true -> "Sin conexión a internet"
             else -> e.localizedMessage ?: "Ha ocurrido un error inesperado"
+        }
+    }
+
+    fun cerrarSesion() {
+        viewModelScope.launch {
+            try {
+                supabase.auth.signOut()
+                exitoLogin = false
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

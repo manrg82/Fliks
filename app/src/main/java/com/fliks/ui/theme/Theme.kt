@@ -29,7 +29,6 @@ fun FliksTheme(
     MaterialTheme(
         colorScheme = CinematicDarkColorScheme,
         typography = Typography,
-        shapes = Shapes,
         content = content
     )
 }

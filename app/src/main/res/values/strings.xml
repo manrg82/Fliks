@@ -9,4 +9,6 @@
     <string name="title_activity_perfil">PerfilActivity</string>
     <string name="title_activity_pelicula_tmdb">PeliculaTMDB</string>
     <string name="title_activity_movies_view_model">MoviesViewModel</string>
+    <string name="title_activity_data_store_manager">DataStoreManager</string>
+    <string name="title_activity_buscar">BuscarActivity</string>
 </resources>

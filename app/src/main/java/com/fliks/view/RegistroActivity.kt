@@ -55,7 +55,7 @@ class RegistroActivity : ComponentActivity() {
         LaunchedEffect(viewModel.exitoLogin) {
             if (viewModel.exitoLogin) {
                 val intent = Intent(this@RegistroActivity, MainActivity::class.java).apply {
-                    putExtra("USUARIO_EMAIL", correo)
+                    putExtra("USUARIO_EMAIL", viewModel.emailUsuario)
                 }
                 startActivity(intent)
                 finishAffinity()

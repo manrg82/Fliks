@@ -14,6 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fliks">
         <activity
+            android:name=".view.BuscarActivity"
+            android:exported="false"
+            android:label="@string/title_activity_buscar"
+            android:theme="@style/Theme.Fliks" />
+        <activity
+            android:name=".data.DataStoreManager"
+            android:exported="false"
+            android:label="@string/title_activity_data_store_manager"
+            android:theme="@style/Theme.Fliks" />
+        <activity
             android:name=".viewmodel.MoviesViewModel"
             android:exported="false"
             android:label="@string/title_activity_movies_view_model"
