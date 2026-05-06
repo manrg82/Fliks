@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -70,7 +71,7 @@ fun FliksNavigationBar(currentTab: Int, context: Context, email: String) {
                 }
             },
             icon = { Icon(painterResource(R.drawable.home), contentDescription = null) },
-            label = { Text("Inicio", fontSize = 12.sp) },
+            label = { Text(stringResource(R.string.inicio), fontSize = 12.sp) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFF007BFF),
                 unselectedIconColor = Color.Gray,
@@ -90,7 +91,7 @@ fun FliksNavigationBar(currentTab: Int, context: Context, email: String) {
                 }
             },
             icon = { Icon(painterResource(R.drawable.search), contentDescription = null) },
-            label = { Text("Buscar", fontSize = 12.sp) },
+            label = { Text(stringResource(R.string.buscar), fontSize = 12.sp) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFF007BFF),
                 unselectedIconColor = Color.Gray,
@@ -110,7 +111,7 @@ fun FliksNavigationBar(currentTab: Int, context: Context, email: String) {
                 }
             },
             icon = { Icon(painterResource(R.drawable.person), contentDescription = null) },
-            label = { Text("Perfil", fontSize = 12.sp) },
+            label = { Text(stringResource(R.string.perfil), fontSize = 12.sp) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFF007BFF),
                 unselectedIconColor = Color.Gray,
@@ -127,7 +128,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: "Usuario"
+        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: getString(R.string.usuario_default)
 
         setContent {
             FliksTheme {
@@ -142,7 +143,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Column(modifier = Modifier.padding(24.dp)) {
                             Text(
-                                "Hola, ${userEmail.split("@")[0]}",
+                                stringResource(R.string.hola_usuario)+userEmail.split("@")[0],
                                 color = Color.White,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold
@@ -156,7 +157,7 @@ class MainActivity : ComponentActivity() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    "Tendencias",
+                                    stringResource(R.string.tendencias),
                                     color = Color.White,
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.SemiBold
@@ -175,7 +176,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Icon(
                                             painter = painterResource(R.drawable.recargar),
-                                            contentDescription = "Actualizar",
+                                            contentDescription = stringResource(R.string.actualizar_desc),
                                             tint = Color(0xFF007BFF)
                                         )
                                     }
@@ -197,7 +198,7 @@ class MainActivity : ComponentActivity() {
                                                 title = peli.title,
                                                 posterPath = peli.posterPath ?: ""
                                             )
-                                            Toast.makeText(this@MainActivity, "Añadida a Ver más tarde", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(this@MainActivity, getString(R.string.toast_anadida_ver_mas_tarde), Toast.LENGTH_SHORT).show()
                                         },
                                         onClick = {
                                             val intent = Intent(this@MainActivity, DetalleActivity::class.java).apply {
@@ -206,10 +207,10 @@ class MainActivity : ComponentActivity() {
                                                 putExtra("PELI_SINOPSIS", peli.overview)
                                                 putExtra("PELI_POSTER", peli.posterPath)
                                                 putExtra("PELI_NOTA", (peli.voteAverage * 10).toInt())
-                                                putExtra("PELI_GENEROS", obtenerNombreGeneros(peli.genreIds).ifEmpty { "Desconocido" })
-                                                val duracion = peli.runtime?.let { if (it > 0) "${it / 60}h ${it % 60}m" else "N/D" } ?: "N/D"
+                                                putExtra("PELI_GENEROS", obtenerNombreGeneros(peli.genreIds).ifEmpty { getString(R.string.genero_desconocido) })
+                                                val duracion = peli.runtime?.let { if (it > 0) "${it / 60}h ${it % 60}m" else getString(R.string.no_disponible) } ?: getString(R.string.no_disponible)
                                                 putExtra("PELI_DURACION", duracion)
-                                                putExtra("PELI_CLASIFICACION", peli.certification ?: "N/D")
+                                                putExtra("PELI_CLASIFICACION", peli.certification ?: getString(R.string.no_disponible))
                                             }
                                             startActivity(intent)
                                         }
@@ -232,12 +233,12 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
 
     val porcentaje = (pelicula.voteAverage * 10).toInt()
     val progreso = (pelicula.voteAverage / 10).toFloat()
-    val generosTexto = obtenerNombreGeneros(pelicula.genreIds).ifEmpty { "Desconocido" }
-    val clasificacion = pelicula.certification ?: "N/D"
+    val generosTexto = obtenerNombreGeneros(pelicula.genreIds).ifEmpty { stringResource(R.string.genero_desconocido) }
+    val clasificacion = pelicula.certification ?: stringResource(R.string.no_disponible)
 
     val duracionFormateada = pelicula.runtime?.let {
-        if (it > 0) "${it / 60}h ${it % 60}m" else "N/D"
-    } ?: "N/D"
+        if (it > 0) "${it / 60}h ${it % 60}m" else stringResource(R.string.no_disponible)
+    } ?: stringResource(R.string.no_disponible)
 
     Card(
         modifier = Modifier
@@ -304,7 +305,7 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.watchlater),
-                            contentDescription = "Guardar",
+                            contentDescription = stringResource(R.string.guardar_desc),
                             tint = Color.Gray
                         )
                     }

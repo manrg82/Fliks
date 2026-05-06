@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -105,14 +106,14 @@ class RegistroActivity : ComponentActivity() {
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.logosvg),
-                        contentDescription = "Logo Fliks",
+                        contentDescription = stringResource(R.string.logo_desc),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
                 Spacer(modifier = Modifier.height(40.dp))
                 Text(
-                    text = "Crear Cuenta",
+                    text = stringResource(R.string.crear_cuenta),
                     color = Color.White,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
@@ -121,7 +122,7 @@ class RegistroActivity : ComponentActivity() {
                 OutlinedTextField(
                     value = correo,
                     onValueChange = { correo = it },
-                    placeholder = { Text("Correo electrónico", color = Color.Gray) },
+                    placeholder = { Text(stringResource(R.string.correo_electronico), color = Color.Gray) },
                     leadingIcon = { Icon(painterResource(R.drawable.email), contentDescription = null, tint = Color.Gray) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -138,7 +139,7 @@ class RegistroActivity : ComponentActivity() {
                 OutlinedTextField(
                     value = contrasena,
                     onValueChange = { contrasena = it },
-                    placeholder = { Text("Contraseña (mínimo 6 caracteres)", color = Color.Gray) },
+                    placeholder = { Text(stringResource(R.string.contrasena_minimo), color = Color.Gray) },
                     leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.lock),
@@ -184,15 +185,15 @@ class RegistroActivity : ComponentActivity() {
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(containerColor = azulBrillante)
                     ) {
-                        Text("Registrarme", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.registrarme), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))
 
                     TextButton(onClick = { finish() }) {
                         Row {
-                            Text("¿Ya tienes cuenta? ", color = Color.White.copy(alpha = 0.6f))
-                            Text("Inicia sesión", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.ya_tienes_cuenta), color = Color.White.copy(alpha = 0.6f))
+                            Text(stringResource(R.string.inicia_sesion), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                     }
                 }

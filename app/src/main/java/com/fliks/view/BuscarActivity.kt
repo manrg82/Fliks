@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +34,7 @@ class BuscarActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: "Usuario"
+        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: getString(R.string.usuario_default)
 
         setContent {
             FliksTheme {
@@ -55,10 +56,10 @@ class BuscarActivity : ComponentActivity() {
                                     putExtra("PELI_SINOPSIS", pelicula.overview)
                                     putExtra("PELI_POSTER", pelicula.posterPath)
                                     putExtra("PELI_NOTA", (pelicula.voteAverage * 10).toInt())
-                                    putExtra("PELI_GENEROS", obtenerNombreGeneros(pelicula.genreIds).ifEmpty { "Desconocido" })
-                                    val duracion = pelicula.runtime?.let { if (it > 0) "${it / 60}h ${it % 60}m" else "N/D" } ?: "N/D"
+                                    putExtra("PELI_GENEROS", obtenerNombreGeneros(pelicula.genreIds).ifEmpty { getString(R.string.genero_desconocido) })
+                                    val duracion = pelicula.runtime?.let { if (it > 0) "${it / 60}h ${it % 60}m" else getString(R.string.no_disponible) } ?: getString(R.string.no_disponible)
                                     putExtra("PELI_DURACION", duracion)
-                                    putExtra("PELI_CLASIFICACION", pelicula.certification ?: "N/D")
+                                    putExtra("PELI_CLASIFICACION", pelicula.certification ?: getString(R.string.no_disponible))
                                 }
                                 startActivity(intent)
                             },
@@ -68,7 +69,7 @@ class BuscarActivity : ComponentActivity() {
                                     title = peli.title,
                                     posterPath = peli.posterPath ?: ""
                                 )
-                                Toast.makeText(this@BuscarActivity, "Añadida a Ver más tarde", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@BuscarActivity, getString(R.string.toast_anadida_ver_mas_tarde), Toast.LENGTH_SHORT).show()
                             }
                         )
                     }
@@ -86,7 +87,7 @@ fun PantallaBusqueda(viewModel: MoviesViewModel, onMovieClick: (PeliculaTMDB) ->
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
-            placeholder = { Text("Buscar película...", color = Color.Gray) },
+            placeholder = { Text(stringResource(R.string.buscar_pelicula_placeholder), color = Color.Gray) },
             leadingIcon = { Icon(painter=painterResource(R.drawable.search), contentDescription = null, tint = Color.Gray) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
@@ -108,7 +109,7 @@ fun PantallaBusqueda(viewModel: MoviesViewModel, onMovieClick: (PeliculaTMDB) ->
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007BFF))
         ) {
-            Text("Buscar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.buscar_boton), fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(24.dp))

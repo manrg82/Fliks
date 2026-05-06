@@ -1,5 +1,7 @@
 package com.fliks.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,6 +11,7 @@ import com.fliks.data.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
@@ -26,6 +29,9 @@ class AuthViewModel : ViewModel() {
     var emailUsuario by mutableStateOf("")
         private set
 
+    var avatarUrl by mutableStateOf<String?>(null)
+        private set
+
     init {
         comprobarSesionActual()
     }
@@ -36,9 +42,39 @@ class AuthViewModel : ViewModel() {
                 if (status is SessionStatus.Authenticated) {
                     emailUsuario = status.session.user?.email ?: "Usuario"
                     exitoLogin = true
+                    cargarAvatar()
                 } else if (status is SessionStatus.NotAuthenticated) {
                     exitoLogin = false
+                    avatarUrl = null
                 }
+            }
+        }
+    }
+    fun cargarAvatar() {
+        viewModelScope.launch {
+            try {
+                val userId = supabase.auth.currentUserOrNull()?.id ?: return@launch
+                val url = supabase.storage["avatars"].publicUrl("perfil_$userId.jpg")
+                avatarUrl = "$url?t=${System.currentTimeMillis()}"
+            } catch (e: Exception) {
+                avatarUrl = null
+            }
+        }
+    }
+    fun subirAvatar(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            try {
+                cargando = true
+                val userId = supabase.auth.currentUserOrNull()?.id ?: return@launch
+                val bytes = context.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: return@launch
+                supabase.storage["avatars"].upload("perfil_$userId.jpg", bytes) {
+                    upsert = true
+                }
+                cargarAvatar()
+            } catch (e: Exception) {
+                mensajeError = "Error al subir la imagen: ${e.localizedMessage}"
+            } finally {
+                cargando = false
             }
         }
     }
@@ -107,6 +143,7 @@ class AuthViewModel : ViewModel() {
             try {
                 supabase.auth.signOut()
                 exitoLogin = false
+                avatarUrl = null
             } catch (e: Exception) {
                 e.printStackTrace()
             }

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -107,7 +108,7 @@ class LoginActivity : ComponentActivity() {
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.logosvg),
-                        contentDescription = "Logo Fliks",
+                        contentDescription = stringResource(R.string.logo_desc),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -115,7 +116,7 @@ class LoginActivity : ComponentActivity() {
                 Spacer(modifier = Modifier.height(40.dp))
 
                 Text(
-                    text = "Entrar a Fliks",
+                    text = stringResource(R.string.entrar_a_fliks),
                     color = Color.White,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
@@ -126,7 +127,7 @@ class LoginActivity : ComponentActivity() {
                 OutlinedTextField(
                     value = correo,
                     onValueChange = { correo = it },
-                    placeholder = { Text("Correo electrónico", color = Color.Gray) },
+                    placeholder = { Text(stringResource(R.string.correo_electronico), color = Color.Gray) },
                     leadingIcon = { Icon(painterResource(R.drawable.email), contentDescription = null, tint = Color.Gray) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -145,7 +146,7 @@ class LoginActivity : ComponentActivity() {
                 OutlinedTextField(
                     value = contrasena,
                     onValueChange = { contrasena = it },
-                    placeholder = { Text("Contraseña", color = Color.Gray) },
+                    placeholder = { Text(stringResource(R.string.contrasena), color = Color.Gray) },
                     leadingIcon = { Icon(painterResource(R.drawable.lock), contentDescription = null, tint = Color.Gray) },
                     trailingIcon = {
                         val imagen = if (contrasenaVisible)
@@ -187,7 +188,7 @@ class LoginActivity : ComponentActivity() {
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(containerColor = azulBrillante)
                     ) {
-                        Text("Iniciar Sesión", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.iniciar_sesion), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -196,8 +197,8 @@ class LoginActivity : ComponentActivity() {
                         startActivity(Intent(this@LoginActivity, RegistroActivity::class.java))
                     }) {
                         Row {
-                            Text("¿No tienes cuenta? ", color = Color.White.copy(alpha = 0.7f))
-                            Text("Regístrate aquí", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.no_tienes_cuenta), color = Color.White.copy(alpha = 0.7f))
+                            Text(stringResource(R.string.registrate_aqui), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                     }
                 }

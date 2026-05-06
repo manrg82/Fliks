@@ -2,9 +2,13 @@ package com.fliks.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -18,12 +22,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +51,7 @@ class PerfilActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: "Usuario"
+        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: getString(R.string.usuario_default)
 
         setContent {
             FliksTheme {
@@ -52,7 +60,8 @@ class PerfilActivity : ComponentActivity() {
                 ) { paddingValues ->
                     PantallaPerfil(
                         email = userEmail,
-                        viewModel = watchLaterViewModel,
+                        authViewModel = authViewModel,
+                        watchLaterViewModel = watchLaterViewModel,
                         onCerrarSesion = {
                             authViewModel.cerrarSesion()
                             android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
@@ -79,44 +88,82 @@ class PerfilActivity : ComponentActivity() {
         }
     }
 
-    // SOBREESCRIBIMOS ESTO PARA ACTUALIZAR SIEMPRE QUE SE ENTRE A LA PANTALLA
     override fun onResume() {
         super.onResume()
         watchLaterViewModel.obtenerLista()
+        authViewModel.cargarAvatar()
     }
 }
 
 @Composable
 fun PantallaPerfil(
     email: String,
-    viewModel: WatchLaterViewModel,
+    authViewModel: AuthViewModel,
+    watchLaterViewModel: WatchLaterViewModel,
     onCerrarSesion: () -> Unit,
     onMovieClick: (WatchLaterMovie) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Hemos eliminado el LaunchedEffect(Unit) de aquí porque ahora se encarga onResume
+    val context = LocalContext.current
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            authViewModel.subirAvatar(context, uri)
+        }
+    }
+    LaunchedEffect(authViewModel.mensajeError) {
+        authViewModel.mensajeError?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            authViewModel.limpiarError()
+        }
+    }
 
     Column(
         modifier = modifier
-            .padding(24.dp)
+            .padding(16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Surface(
-            modifier = Modifier.size(100.dp),
-            shape = CircleShape,
-            color = Color(0xFF001B33).copy(alpha = 0.6f),
-            border = BorderStroke(2.dp, Color(0xFF007BFF))
+        Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(110.dp)
+                .clickable {
+                    photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                }
         ) {
-            Icon(
-                painter = painterResource(R.drawable.person),
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.padding(24.dp)
-            )
+            if (authViewModel.cargando) {
+                CircularProgressIndicator(color = Color(0xFF007BFF))
+            } else {
+                Surface(
+                    modifier = Modifier.size(100.dp),
+                    shape = CircleShape,
+                    color = Color(0xFF001B33).copy(alpha = 0.6f),
+                    border = BorderStroke(2.dp, Color(0xFF007BFF))
+                ) {
+                    if (authViewModel.avatarUrl != null) {
+                        AsyncImage(
+                            model = authViewModel.avatarUrl,
+                            contentDescription = "Foto de perfil",
+                            modifier = Modifier.fillMaxSize().clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.person),
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.padding(24.dp)
+                        )
+                    }
+                }
+            }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("Toca para cambiar foto", color = Color.Gray, fontSize = 12.sp)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -127,10 +174,10 @@ fun PantallaPerfil(
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Ver más tarde",
+            text = stringResource(R.string.ver_mas_tarde),
             color = Color.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
@@ -139,9 +186,9 @@ fun PantallaPerfil(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (viewModel.listaVerMasTarde.isEmpty()) {
+        if (watchLaterViewModel.listaVerMasTarde.isEmpty()) {
             Text(
-                text = "No tienes películas pendientes.",
+                text = stringResource(R.string.no_peliculas_pendientes),
                 color = Color.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.align(Alignment.Start)
@@ -151,7 +198,7 @@ fun PantallaPerfil(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(viewModel.listaVerMasTarde) { peli ->
+                items(watchLaterViewModel.listaVerMasTarde) { peli ->
                     Card(
                         modifier = Modifier
                             .size(120.dp, 180.dp)
@@ -163,7 +210,7 @@ fun PantallaPerfil(
                         Box(modifier = Modifier.fillMaxSize()) {
 
                             val esImagenLocal = peli.posterPath.isNotEmpty() && !peli.posterPath.startsWith("/")
-                            val contextLocal = androidx.compose.ui.platform.LocalContext.current
+                            val contextLocal = LocalContext.current
                             val modeloImagen = if (esImagenLocal) {
                                 contextLocal.resources.getIdentifier(peli.posterPath, "drawable", contextLocal.packageName)
                             } else {
@@ -179,7 +226,7 @@ fun PantallaPerfil(
                             )
 
                             IconButton(
-                                onClick = { viewModel.marcarComoVisto(peli.movieId, peli.title, peli.posterPath) },
+                                onClick = { watchLaterViewModel.marcarComoVisto(peli.movieId, peli.title, peli.posterPath) },
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
                                     .padding(6.dp)
@@ -188,7 +235,7 @@ fun PantallaPerfil(
                             ) {
                                 Icon(
                                     painter=painterResource(R.drawable.add),
-                                    contentDescription = "Marcar como visto",
+                                    contentDescription = stringResource(R.string.marcar_visto_desc),
                                     tint = Color.White,
                                     modifier = Modifier.size(18.dp)
                                 )
@@ -199,10 +246,10 @@ fun PantallaPerfil(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Películas Vistas",
+            text = stringResource(R.string.peliculas_vistas),
             color = Color.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
@@ -211,9 +258,9 @@ fun PantallaPerfil(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (viewModel.listaVistas.isEmpty()) {
+        if (watchLaterViewModel.listaVistas.isEmpty()) {
             Text(
-                text = "No has marcado películas como vistas.",
+                text = stringResource(R.string.no_peliculas_vistas),
                 color = Color.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.align(Alignment.Start)
@@ -223,7 +270,7 @@ fun PantallaPerfil(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(viewModel.listaVistas) { peli ->
+                items(watchLaterViewModel.listaVistas) { peli ->
                     Card(
                         modifier = Modifier
                             .size(120.dp, 180.dp)
@@ -233,7 +280,7 @@ fun PantallaPerfil(
                         border = BorderStroke(0.5.dp, Color(0xFF326691).copy(alpha = 0.3f))
                     ) {
                         val esImagenLocal = peli.posterPath.isNotEmpty() && !peli.posterPath.startsWith("/")
-                        val contextLocal = androidx.compose.ui.platform.LocalContext.current
+                        val contextLocal = LocalContext.current
                         val modeloImagen = if (esImagenLocal) {
                             contextLocal.resources.getIdentifier(peli.posterPath, "drawable", contextLocal.packageName)
                         } else {
@@ -252,7 +299,7 @@ fun PantallaPerfil(
             }
         }
 
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = onCerrarSesion,
@@ -260,7 +307,7 @@ fun PantallaPerfil(
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red.copy(alpha = 0.8f))
         ) {
-            Text("Cerrar Sesión", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            Text(stringResource(R.string.cerrar_sesion), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
     }
 }

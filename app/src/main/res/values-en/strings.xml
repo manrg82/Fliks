@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fliks</string>
+    <string name="genero_desconocido">Unknown</string>
+    <string name="no_disponible">N/A</string>
+    <string name="usuario_default">User</string>
+    <string name="buscar_pelicula_placeholder">Search for a movie...</string>
+    <string name="buscar_boton">Search</string>
+    <string name="toast_anadida_ver_mas_tarde">Added to Watch Later</string>
+    <string name="sin_sinopsis">No synopsis available</string>
+    <string name="marcada_como_vista">✓ Marked as Seen</string>
+    <string name="guardado">Saved</string>
+    <string name="ver_mas_tarde">Watch Later</string>
+    <string name="visto">Watched</string>
+    <string name="sinopsis">Synopsis</string>
+    <string name="volver_desc">Go Back</string>
+    <string name="entrar_a_fliks">Enter Fliks</string>
+    <string name="peliculas_vistas">Seen movies</string>
+    <string name="no_peliculas_vistas">You haven\'t marked any movie as seen</string>
+    <string name="cerrar_sesion">Log Out</string>
+    <string name="crear_cuenta">Create account</string>
+    <string name="contrasena_minimo">Password (min 6 characters)</string>
+    <string name="registrarme">Register</string>
+    <string name="ya_tienes_cuenta">Got an account?</string>
+    <string name="inicia_sesion">Log In</string>
+    <string name="correo_electronico">Email</string>
+    <string name="contrasena">Password</string>
+    <string name="iniciar_sesion">Log In</string>
+    <string name="no_tienes_cuenta">Dont have an account?</string>
+    <string name="registrate_aqui">Register here</string>
+    <string name="inicio">Start</string>
+    <string name="buscar">Search</string>
+    <string name="perfil">Profile</string>
+    <string name="hola_usuario">"Hello, "</string>
+    <string name="tendencias">Trends</string>
+    <string name="actualizar_desc">Update</string>
+    <string name="guardar_desc">Save</string>
+    <string name="no_peliculas_pendientes">You dont have any pending movies.</string>
+    <string name="marcar_visto_desc">Mark as seen</string>
+</resources>

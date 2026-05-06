@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,8 +41,8 @@ class DetalleActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val id = intent.getIntExtra("PELI_ID", 0)
-        val titulo = intent.getStringExtra("PELI_TITULO") ?: "Desconocido"
-        val sinopsis = intent.getStringExtra("PELI_SINOPSIS") ?: "Sin sinopsis disponible."
+        val titulo = intent.getStringExtra("PELI_TITULO") ?: getString(R.string.genero_desconocido)
+        val sinopsis = intent.getStringExtra("PELI_SINOPSIS") ?: getString(R.string.sin_sinopsis)
         val poster = intent.getStringExtra("PELI_POSTER") ?: ""
         val nota = intent.getIntExtra("PELI_NOTA", 0)
         val generos = intent.getStringExtra("PELI_GENEROS") ?: ""
@@ -182,7 +183,7 @@ fun PantallaDetalle(
                         ),
                         border = BorderStroke(1.dp, Color(0xFF326691).copy(alpha = 0.3f))
                     ) {
-                        Text("✓ Marcada como Vista", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.marcada_como_vista), fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
                 } else {
                     Row(
@@ -198,7 +199,7 @@ fun PantallaDetalle(
                             ),
                             border = BorderStroke(1.dp, Color(0xFF007BFF))
                         ) {
-                            Text(if (viewModel.esVerMasTarde) "Guardado" else "Ver más tarde", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            Text(if (viewModel.esVerMasTarde) stringResource(R.string.guardado) else stringResource(R.string.ver_mas_tarde), color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                         }
 
                         Button(
@@ -207,7 +208,7 @@ fun PantallaDetalle(
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007BFF))
                         ) {
-                            Text("Visto", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.visto), color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -222,7 +223,7 @@ fun PantallaDetalle(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Sinopsis",
+                            text = stringResource(R.string.sinopsis),
                             color = Color(0xFF007BFF),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
@@ -248,7 +249,7 @@ fun PantallaDetalle(
         ) {
             Icon(
                 painter = painterResource(R.drawable.back),
-                contentDescription = "Volver",
+                contentDescription = stringResource(R.string.volver_desc),
                 tint = Color.White
             )
         }

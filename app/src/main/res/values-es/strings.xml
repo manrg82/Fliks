@@ -1,22 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Fliks</string>
-    <string name="title_activity_supabase_client" translatable="false">SupabaseClient</string>
-    <string name="title_activity_autentificacion_view_model" translatable="false">AutentificacionViewModel</string>
-    <string name="title_activity_login" translatable="false">LoginActivity</string>
-    <string name="title_activity_registro" translatable="false">RegistroActivity</string>
-    <string name="title_activity_pelicula" translatable="false">Pelicula</string>
-    <string name="title_activity_detalle" translatable="false">DetalleActivity</string>
-    <string name="title_activity_perfil" translatable="false">PerfilActivity</string>
-    <string name="title_activity_pelicula_tmdb" translatable="false">PeliculaTMDB</string>
-    <string name="title_activity_movies_view_model" translatable="false">MoviesViewModel</string>
-    <string name="title_activity_data_store_manager" translatable="false">DataStoreManager</string>
-    <string name="title_activity_buscar" translatable="false">BuscarActivity</string>
+    <string name="genero_desconocido">Desconocido</string>
+    <string name="no_disponible">N/D</string>
     <string name="usuario_default">Usuario</string>
     <string name="buscar_pelicula_placeholder">Buscar película…</string>
     <string name="buscar_boton">Buscar</string>
     <string name="toast_anadida_ver_mas_tarde">Añadida a Ver más tarde</string>
-    <string name="genero_desconocido">Desconocido</string>
-    <string name="no_disponible">N/D</string>
     <string name="sin_sinopsis">Sin sinopsis disponible.</string>
     <string name="marcada_como_vista">✓ Marcada como Vista</string>
     <string name="guardado">Guardado</string>
@@ -24,12 +14,11 @@
     <string name="visto">Visto</string>
     <string name="sinopsis">Sinopsis</string>
     <string name="volver_desc">Volver</string>
-    <string name="logo_desc" translatable="false">Logo Fliks</string>
     <string name="entrar_a_fliks">Entrar a Fliks</string>
     <string name="correo_electronico">Correo electrónico</string>
     <string name="contrasena">Contraseña</string>
     <string name="iniciar_sesion">Iniciar Sesión</string>
-    <string name="no_tienes_cuenta">¿No tienes cuenta? </string>
+    <string name="no_tienes_cuenta">"¿No tienes cuenta? "</string>
     <string name="registrate_aqui">Regístrate aquí</string>
     <string name="inicio">Inicio</string>
     <string name="buscar">Buscar</string>
@@ -46,6 +35,6 @@
     <string name="crear_cuenta">Crear Cuenta</string>
     <string name="contrasena_minimo">Contraseña (mínimo 6 caracteres)</string>
     <string name="registrarme">Registrarme</string>
-    <string name="ya_tienes_cuenta">¿Ya tienes cuenta? </string>
+    <string name="ya_tienes_cuenta">"¿Ya tienes cuenta? "</string>
     <string name="inicia_sesion">Inicia sesión</string>
 </resources>
