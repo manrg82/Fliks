@@ -48,4 +48,6 @@
     <string name="registrarme">Registrarme</string>
     <string name="ya_tienes_cuenta">¿Ya tienes cuenta? </string>
     <string name="inicia_sesion">Inicia sesión</string>
+    <string name="notif_titulo">¡Tienes peliculas pendientes!</string>
+    <string name="notif_mensaje">Tienes %1$d películas esperando en tu lista de Ver más tarde.</string>
 </resources>

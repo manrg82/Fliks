@@ -64,6 +64,7 @@ class PerfilActivity : ComponentActivity() {
                         watchLaterViewModel = watchLaterViewModel,
                         onCerrarSesion = {
                             authViewModel.cerrarSesion()
+                            // Matamos toda la pila de pantallas para que no puedan volver atrás tras cerrar sesión
                             android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
                                 val intent = Intent(this, LoginActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -87,14 +88,13 @@ class PerfilActivity : ComponentActivity() {
             }
         }
     }
-
+    //uso onResume para recargar la foto de perfil y las pelis al volver a la pestaña
     override fun onResume() {
         super.onResume()
         watchLaterViewModel.obtenerLista()
         authViewModel.cargarAvatar()
     }
 }
-
 @Composable
 fun PantallaPerfil(
     email: String,
@@ -105,20 +105,20 @@ fun PantallaPerfil(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val photoPickerLauncher = rememberLauncherForActivityResult(
+    val photoPickerLauncher = rememberLauncherForActivityResult(//selector de foto de perfil
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
             authViewModel.subirAvatar(context, uri)
         }
     }
+    //muestra un Toast si falla al subir la foto
     LaunchedEffect(authViewModel.mensajeError) {
         authViewModel.mensajeError?.let { error ->
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
             authViewModel.limpiarError()
         }
     }
-
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -126,7 +126,7 @@ fun PantallaPerfil(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(8.dp))
-        Box(
+        Box(//foto de perfil
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(110.dp)
@@ -151,6 +151,7 @@ fun PantallaPerfil(
                             contentScale = ContentScale.Crop
                         )
                     } else {
+                        //si no hay pone un icono generico
                         Icon(
                             painter = painterResource(R.drawable.person),
                             contentDescription = null,
@@ -161,21 +162,16 @@ fun PantallaPerfil(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
         Text("Toca para cambiar foto", color = Color.Gray, fontSize = 12.sp)
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             text = email,
             color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             text = stringResource(R.string.ver_mas_tarde),
             color = Color.White,
@@ -183,9 +179,8 @@ fun PantallaPerfil(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Start)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
+        //lista de ver mas tarde
         if (watchLaterViewModel.listaVerMasTarde.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_peliculas_pendientes),
@@ -245,9 +240,7 @@ fun PantallaPerfil(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             text = stringResource(R.string.peliculas_vistas),
             color = Color.White,
@@ -255,9 +248,8 @@ fun PantallaPerfil(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Start)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
+        //lista de pelis vistas
         if (watchLaterViewModel.listaVistas.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_peliculas_vistas),
@@ -286,7 +278,6 @@ fun PantallaPerfil(
                         } else {
                             "${TMDBClient.IMAGE_BASE_URL}${peli.posterPath}"
                         }
-
                         AsyncImage(
                             model = modeloImagen,
                             contentDescription = peli.title,
@@ -298,9 +289,8 @@ fun PantallaPerfil(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
+        //boton rojo para cerrar sesión
         Button(
             onClick = onCerrarSesion,
             modifier = Modifier.fillMaxWidth().height(50.dp),

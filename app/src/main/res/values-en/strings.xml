@@ -37,4 +37,6 @@
     <string name="guardar_desc">Save</string>
     <string name="no_peliculas_pendientes">You dont have any pending movies.</string>
     <string name="marcar_visto_desc">Mark as seen</string>
+    <string name="notif_titulo">You\'ve got pending movies!</string>
+    <string name="notif_mensaje">You have %1$d movies waiting for you in your Watch Later list</string>
 </resources>

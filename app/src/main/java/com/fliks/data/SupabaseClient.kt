@@ -6,13 +6,13 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
 
 object SupabaseClient {
-    private const val SUPABASE_URL = "https://mgmfxktplnfhnvhtphhc.supabase.co"
+    private const val SUPABASE_URL = "https://mgmfxktplnfhnvhtphhc.supabase.co"//url y claves del proy en supabase
     private const val SUPABASE_KEY = "sb_publishable_pcQ06EMZznyGeIrPFSdJcA_TqysiqD0"
 
     val client = createSupabaseClient(
         supabaseUrl = SUPABASE_URL,
         supabaseKey = SUPABASE_KEY
-    ) {
+    ) {//plugins que voy a usar
         install(Auth)
         install(Postgrest)
         install(Storage)

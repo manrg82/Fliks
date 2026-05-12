@@ -21,6 +21,8 @@ val onError = Color(0xFF690005)
 val background = Color(0xFF121414)
 val onBackground = Color(0xFFe2e2e2)
 val outline = Color(0xFF8b90a0)
+
 val azulBrillante = Color(0xFF007BFF)
 val fondoTarjeta = Color(0xFF001B33).copy(alpha = 0.6f)
 val azulBorde = Color(0xFF326691).copy(alpha = 0.3f)
+val azulFondo = Color(0xFF001220)

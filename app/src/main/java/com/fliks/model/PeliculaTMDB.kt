@@ -9,7 +9,7 @@ data class RespuestaTMDB(
 )
 
 @Serializable
-data class PeliculaTMDB(
+data class PeliculaTMDB(//dataclass de pelicula con los campos que me interesan de la api de tmdb
     val id: Int,
     val title: String,
     @SerialName("poster_path") val posterPath: String?,

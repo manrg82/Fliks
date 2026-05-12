@@ -34,8 +34,8 @@ class BuscarActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //guardo el email para que el botton bar lo mantenga al cambiar de pestaña
         val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: getString(R.string.usuario_default)
-
         setContent {
             FliksTheme {
                 Scaffold(
@@ -78,11 +78,10 @@ class BuscarActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun PantallaBusqueda(viewModel: MoviesViewModel, onMovieClick: (PeliculaTMDB) -> Unit, onGuardarClick: (PeliculaTMDB) -> Unit) {
+    //guardo lo que el usuario está tecleando
     var query by remember { mutableStateOf("") }
-
     Column(modifier = Modifier.padding(24.dp).fillMaxSize()) {
         OutlinedTextField(
             value = query,
@@ -100,9 +99,8 @@ fun PantallaBusqueda(viewModel: MoviesViewModel, onMovieClick: (PeliculaTMDB) ->
             ),
             singleLine = true
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
+        //lanza la búsqueda en el viewmodel al pulsar
         Button(
             onClick = { viewModel.buscarPelicula(query) },
             modifier = Modifier.fillMaxWidth().height(50.dp),
@@ -111,18 +109,18 @@ fun PantallaBusqueda(viewModel: MoviesViewModel, onMovieClick: (PeliculaTMDB) ->
         ) {
             Text(stringResource(R.string.buscar_boton), fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
-
         Spacer(modifier = Modifier.height(24.dp))
-
         if (viewModel.estaBuscando) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = Color(0xFF007BFF))
             }
         } else if (viewModel.errorBusqueda != null) {
+            //muestra el error si lo hay
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = viewModel.errorBusqueda!!, color = Color.Red, fontSize = 16.sp)
             }
         } else {
+            //lista con las pelis encontradas
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.weight(1f)

@@ -29,12 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fliks.R
 import com.fliks.ui.theme.FliksTheme
+import com.fliks.ui.theme.azulBorde
+import com.fliks.ui.theme.azulBrillante
+import com.fliks.ui.theme.azulFondo
 import com.fliks.viewmodel.AuthViewModel
 
 class RegistroActivity : ComponentActivity() {
 
     private val viewModel: AuthViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -43,16 +45,12 @@ class RegistroActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun PantallaRegistro() {
         var correo by remember { mutableStateOf("") }
         var contrasena by remember { mutableStateOf("") }
         var contrasenaVisible by remember { mutableStateOf(false) }
-        val azulFondo = Color(0xFF001220)
-        val azulBrillante = Color(0xFF007BFF)
-        val azulBorde = Color(0xFF326691)
-
+        //si se crea la cuenta se manda a mainactivity
         LaunchedEffect(viewModel.exitoLogin) {
             if (viewModel.exitoLogin) {
                 val intent = Intent(this@RegistroActivity, MainActivity::class.java).apply {
@@ -62,13 +60,11 @@ class RegistroActivity : ComponentActivity() {
                 finishAffinity()
             }
         }
-
         LaunchedEffect(viewModel.mensajeError) {
             viewModel.mensajeError?.let { error ->
                 Toast.makeText(this@RegistroActivity, error, Toast.LENGTH_LONG).show()
             }
         }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -187,9 +183,7 @@ class RegistroActivity : ComponentActivity() {
                     ) {
                         Text(stringResource(R.string.registrarme), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
-
                     Spacer(modifier = Modifier.height(32.dp))
-
                     TextButton(onClick = { finish() }) {
                         Row {
                             Text(stringResource(R.string.ya_tienes_cuenta), color = Color.White.copy(alpha = 0.6f))

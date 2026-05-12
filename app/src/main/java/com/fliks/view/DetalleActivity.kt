@@ -33,13 +33,11 @@ import com.fliks.ui.theme.FliksTheme
 import com.fliks.viewmodel.WatchLaterViewModel
 
 class DetalleActivity : ComponentActivity() {
-
     private val watchLaterViewModel: WatchLaterViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
+        //recoge todo lo que nos han mandado por el intent
         val id = intent.getIntExtra("PELI_ID", 0)
         val titulo = intent.getStringExtra("PELI_TITULO") ?: getString(R.string.genero_desconocido)
         val sinopsis = intent.getStringExtra("PELI_SINOPSIS") ?: getString(R.string.sin_sinopsis)
@@ -48,7 +46,6 @@ class DetalleActivity : ComponentActivity() {
         val generos = intent.getStringExtra("PELI_GENEROS") ?: ""
         val duracion = intent.getStringExtra("PELI_DURACION") ?: ""
         val clasificacion = intent.getStringExtra("PELI_CLASIFICACION") ?: ""
-
         setContent {
             FliksTheme {
                 Scaffold(
@@ -76,7 +73,6 @@ class DetalleActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun PantallaDetalle(
     id: Int,
@@ -91,17 +87,18 @@ fun PantallaDetalle(
     onVolver: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    //chequea en Supabase si ya teníamos esta peli guardada en alguna lista de antes
     LaunchedEffect(id) {
         viewModel.limpiarEstadoPelicula()
         viewModel.verificarEstadoPelicula(id)
     }
-
     Box(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
+            //poster de la peli
             Box(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -112,7 +109,6 @@ fun PantallaDetalle(
                 } else {
                     "${TMDBClient.IMAGE_BASE_URL}$posterPath"
                 }
-
                 AsyncImage(
                     model = modeloImagen,
                     contentDescription = titulo,
@@ -121,7 +117,6 @@ fun PantallaDetalle(
                     contentScale = ContentScale.FillWidth
                 )
             }
-
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
                     text = titulo,
@@ -129,17 +124,13 @@ fun PantallaDetalle(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = generos,
                     color = Color.Gray,
                     fontSize = 15.sp
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -161,16 +152,15 @@ fun PantallaDetalle(
                         trackColor = Color.White.copy(alpha = 0.1f)
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ChipInfoDetalle(text = duracion)
                     ChipInfoDetalle(text = clasificacion)
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
 
+                //logica de los botones de "ver más tarde" y "marcar como visto"
                 if (viewModel.esVisto) {
                     Button(
                         onClick = { },
@@ -212,9 +202,7 @@ fun PantallaDetalle(
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(32.dp))
-
                 Card(
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF001B33).copy(alpha = 0.6f)),
                     shape = RoundedCornerShape(16.dp),
@@ -239,7 +227,7 @@ fun PantallaDetalle(
                 }
             }
         }
-
+        //boton de volver
         IconButton(
             onClick = onVolver,
             modifier = Modifier
@@ -255,7 +243,6 @@ fun PantallaDetalle(
         }
     }
 }
-
 @Composable
 fun ChipInfoDetalle(text: String) {
     Box(

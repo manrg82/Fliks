@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class WatchLaterMovie(
+data class WatchLaterMovie(//dataclass de pelicula en la lista para ver mas tarde
     @SerialName("user_id") val userId: String,
     @SerialName("movie_id") val movieId: Int,
     @SerialName("title") val title: String,

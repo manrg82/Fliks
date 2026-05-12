@@ -7,7 +7,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
 object TMDBClient {
-    const val API_KEY = "d30ee3758477f93540cbb63bef8e7506"
+    const val API_KEY = "d30ee3758477f93540cbb63bef8e7506"//clave de la api de tmdb
     const val BASE_URL = "https://api.themoviedb.org/3"
     const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
 

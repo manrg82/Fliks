@@ -18,34 +18,34 @@ val SplineSans = FontFamily(
 val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = SplineSans,
-        fontWeight = FontWeight.Bold, // 700
+        fontWeight = FontWeight.Bold,
         fontSize = 48.sp,
-        lineHeight = 52.sp, // Aprox 1.1
+        lineHeight = 52.sp,
         letterSpacing = (-0.02).sp
     ),
     headlineLarge = TextStyle(
         fontFamily = SplineSans,
-        fontWeight = FontWeight.Bold, // 700
+        fontWeight = FontWeight.Bold,
         fontSize = 32.sp,
-        lineHeight = 38.sp, // Aprox 1.2
+        lineHeight = 38.sp,
         letterSpacing = (-0.01).sp
     ),
     bodyLarge = TextStyle(
         fontFamily = SplineSans,
-        fontWeight = FontWeight.Normal, // 400
+        fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
-        lineHeight = 28.sp // Aprox 1.6
+        lineHeight = 28.sp
     ),
     labelMedium = TextStyle(
         fontFamily = SplineSans,
-        fontWeight = FontWeight.SemiBold, // 600
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         letterSpacing = 0.05.sp
     ),
     labelSmall = TextStyle(
         fontFamily = SplineSans,
-        fontWeight = FontWeight.Light, // 500
+        fontWeight = FontWeight.Light,
         fontSize = 12.sp,
-        lineHeight = 17.sp // Aprox 1.4
+        lineHeight = 17.sp
     )
 )

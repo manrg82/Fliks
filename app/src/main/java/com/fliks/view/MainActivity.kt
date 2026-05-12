@@ -34,9 +34,13 @@ import com.fliks.R
 import com.fliks.data.TMDBClient
 import com.fliks.model.PeliculaTMDB
 import com.fliks.ui.theme.FliksTheme
+import com.fliks.ui.theme.azulBorde
+import com.fliks.ui.theme.azulBrillante
+import com.fliks.ui.theme.fondoTarjeta
 import com.fliks.viewmodel.MoviesViewModel
 import com.fliks.viewmodel.WatchLaterViewModel
 
+//traduce los IDs numéricos de la API a nombres de géneros
 fun obtenerNombreGeneros(ids: List<Int>): String {
     val mapaGeneros = mapOf(
         28 to "Acción", 12 to "Aventura", 16 to "Animación", 35 to "Comedia",
@@ -48,6 +52,7 @@ fun obtenerNombreGeneros(ids: List<Int>): String {
     return ids.mapNotNull { mapaGeneros[it] }.take(2).joinToString(" / ")
 }
 
+//menu de navegación inferior que se reutiliza en todas las pantallas principales (inicio, búsqueda y perfil)
 @Composable
 fun FliksNavigationBar(currentTab: Int, context: Context, email: String) {
     NavigationBar(
@@ -59,6 +64,7 @@ fun FliksNavigationBar(currentTab: Int, context: Context, email: String) {
             shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
         )
     ) {
+        //inicio
         NavigationBarItem(
             selected = currentTab == 0,
             onClick = {
@@ -79,6 +85,7 @@ fun FliksNavigationBar(currentTab: Int, context: Context, email: String) {
                 indicatorColor = Color.Transparent
             )
         )
+        //buscar
         NavigationBarItem(
             selected = currentTab == 1,
             onClick = {
@@ -99,6 +106,7 @@ fun FliksNavigationBar(currentTab: Int, context: Context, email: String) {
                 indicatorColor = Color.Transparent
             )
         )
+        //perfil
         NavigationBarItem(
             selected = currentTab == 2,
             onClick = {
@@ -128,8 +136,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: getString(R.string.usuario_default)
 
+        //arranco el servicio de recordatorios al iniciar la app para que esté siempre activo en segundo plano
+        val serviceIntent = Intent(this, com.fliks.service.MovieReminderService::class.java)
+        startService(serviceIntent)
+        //email del usuario logeado
+        val userEmail = intent.getStringExtra("USUARIO_EMAIL") ?: getString(R.string.usuario_default)
         setContent {
             FliksTheme {
                 Scaffold(
@@ -142,6 +154,7 @@ class MainActivity : ComponentActivity() {
                             .background(Brush.verticalGradient(listOf(Color(0xFF002B4D), Color(0xFF001220))))
                     ) {
                         Column(modifier = Modifier.padding(24.dp)) {
+                            //saludo personalizado con el email del usuario (solo la parte antes del @)
                             Text(
                                 stringResource(R.string.hola_usuario)+userEmail.split("@")[0],
                                 color = Color.White,
@@ -162,7 +175,6 @@ class MainActivity : ComponentActivity() {
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
-
                                 if (moviesViewModel.estaCargando) {
                                     CircularProgressIndicator(
                                         modifier = Modifier.size(24.dp),
@@ -184,7 +196,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             Spacer(modifier = Modifier.height(16.dp))
-
+                            //lazycolumn de tendencias
                             LazyColumn(
                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                 modifier = Modifier.weight(1f)
@@ -201,6 +213,7 @@ class MainActivity : ComponentActivity() {
                                             Toast.makeText(this@MainActivity, getString(R.string.toast_anadida_ver_mas_tarde), Toast.LENGTH_SHORT).show()
                                         },
                                         onClick = {
+                                            //mando todos los datos a la pantalla de detalle por el intent
                                             val intent = Intent(this@MainActivity, DetalleActivity::class.java).apply {
                                                 putExtra("PELI_ID", peli.id)
                                                 putExtra("PELI_TITULO", peli.title)
@@ -225,11 +238,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//tarjeta para pintar cada peli (usada en el main y en el buscador)
 @Composable
 fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick: () -> Unit) {
-    val azulBrillante = Color(0xFF007BFF)
-    val fondoTarjeta = Color(0xFF001B33).copy(alpha = 0.6f)
-    val azulBorde = Color(0xFF326691).copy(alpha = 0.3f)
 
     val porcentaje = (pelicula.voteAverage * 10).toInt()
     val progreso = (pelicula.voteAverage / 10).toFloat()
@@ -255,6 +266,7 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
                 .heightIn(min = 170.dp)
                 .padding(12.dp)
         ) {
+            //comprueba si la imagen es local o si hay que traerla de internet
             val esImagenLocal = !pelicula.posterPath.isNullOrEmpty() && !pelicula.posterPath.startsWith("/")
             val contextLocal = androidx.compose.ui.platform.LocalContext.current
             val modeloImagen = if (esImagenLocal) {
@@ -262,7 +274,6 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
             } else {
                 "${TMDBClient.IMAGE_BASE_URL}${pelicula.posterPath}"
             }
-
             AsyncImage(
                 model = modeloImagen,
                 contentDescription = pelicula.title,
@@ -273,9 +284,7 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -296,7 +305,6 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
                     )
-
                     IconButton(
                         onClick = onGuardarClick,
                         modifier = Modifier
@@ -310,7 +318,6 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
@@ -334,6 +341,7 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
                         fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
+                    // Barra azul de la puntuación
                     LinearProgressIndicator(
                         progress = { progreso },
                         modifier = Modifier
@@ -355,7 +363,7 @@ fun CardPeliculaTMDB(pelicula: PeliculaTMDB, onGuardarClick: () -> Unit, onClick
         }
     }
 }
-
+//caja con la duracion y la clasificacion
 @Composable
 fun ChipInfo(text: String) {
     Box(

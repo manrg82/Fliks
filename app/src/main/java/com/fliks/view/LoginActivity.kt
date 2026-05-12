@@ -29,6 +29,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fliks.ui.theme.FliksTheme
+import com.fliks.ui.theme.azulBorde
+import com.fliks.ui.theme.azulBrillante
+import com.fliks.ui.theme.azulFondo
 import com.fliks.viewmodel.AuthViewModel
 
 class LoginActivity : ComponentActivity() {
@@ -49,11 +52,6 @@ class LoginActivity : ComponentActivity() {
         var correo by remember { mutableStateOf("") }
         var contrasena by remember { mutableStateOf("") }
         var contrasenaVisible by remember { mutableStateOf(false) }
-
-        val azulFondo = Color(0xFF001220)
-        val azulBrillante = Color(0xFF007BFF)
-        val azulBorde = Color(0xFF326691)
-
         LaunchedEffect(viewModel.exitoLogin) {
             if (viewModel.exitoLogin) {
                 val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
@@ -63,13 +61,11 @@ class LoginActivity : ComponentActivity() {
                 finish()
             }
         }
-
         LaunchedEffect(viewModel.mensajeError) {
             viewModel.mensajeError?.let { error ->
                 Toast.makeText(this@LoginActivity, error, Toast.LENGTH_LONG).show()
             }
         }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,7 +86,6 @@ class LoginActivity : ComponentActivity() {
                         )
                     )
             )
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -114,16 +109,13 @@ class LoginActivity : ComponentActivity() {
                     )
                 }
                 Spacer(modifier = Modifier.height(40.dp))
-
                 Text(
                     text = stringResource(R.string.entrar_a_fliks),
                     color = Color.White,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
-
                 Spacer(modifier = Modifier.height(40.dp))
-
                 OutlinedTextField(
                     value = correo,
                     onValueChange = { correo = it },
@@ -140,9 +132,7 @@ class LoginActivity : ComponentActivity() {
                     ),
                     singleLine = true
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 OutlinedTextField(
                     value = contrasena,
                     onValueChange = { contrasena = it },
@@ -163,6 +153,7 @@ class LoginActivity : ComponentActivity() {
                             )
                         }
                     },
+                    //pone la contraseña en puntos o la muestra dependiendo del estado de contrasenaVisible
                     visualTransformation = if (contrasenaVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -174,12 +165,11 @@ class LoginActivity : ComponentActivity() {
                     ),
                     singleLine = true
                 )
-
                 Spacer(modifier = Modifier.height(40.dp))
-
                 if (viewModel.cargando) {
                     CircularProgressIndicator(color = azulBrillante)
                 } else {
+                    //btn de entrar que llama al Supabase
                     Button(
                         onClick = { viewModel.iniciarSesion(correo, contrasena) },
                         modifier = Modifier
