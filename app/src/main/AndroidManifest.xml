@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -15,41 +14,7 @@
         android:roundIcon="@mipmap/logoapp_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fliks">
-        <activity
-            android:name=".view.BuscarActivity"
-            android:exported="false"
-            android:label="Buscar"
-            android:theme="@style/Theme.Fliks" />
-        <activity
-            android:name=".data.DataStoreManager"
-            android:exported="false"
-            android:label="datastoremanager"
-            android:theme="@style/Theme.Fliks" />
-        <activity
-            android:name=".viewmodel.MoviesViewModel"
-            android:exported="false"
-            android:label="moviesviewmodel"
-            android:theme="@style/Theme.Fliks" />
-        <activity
-            android:name=".model.PeliculaTMDB"
-            android:exported="false"
-            android:label="@string/title_activity_pelicula_tmdb"
-            android:theme="@style/Theme.Fliks" />
-        <activity
-            android:name=".view.PerfilActivity"
-            android:exported="false"
-            android:label="@string/title_activity_perfil"
-            android:theme="@style/Theme.Fliks" />
-        <activity
-            android:name=".view.DetalleActivity"
-            android:exported="false"
-            android:label="@string/title_activity_detalle"
-            android:theme="@style/Theme.Fliks" />
-        <activity
-            android:name=".model.Pelicula"
-            android:exported="false"
-            android:label="@string/title_activity_pelicula"
-            android:theme="@style/Theme.Fliks" />
+
         <activity
             android:name=".view.LoginActivity"
             android:exported="true"
@@ -57,20 +22,40 @@
             android:theme="@style/Theme.Fliks">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".view.RegistroActivity"
             android:exported="false"
             android:label="RegistroActivity"
             android:theme="@style/Theme.Fliks" />
+
         <activity
             android:name=".view.MainActivity"
             android:exported="false"
             android:label="Fliks"
             android:theme="@style/Theme.Fliks" />
+
+        <activity
+            android:name=".view.BuscarActivity"
+            android:exported="false"
+            android:label="Buscar"
+            android:theme="@style/Theme.Fliks" />
+
+        <activity
+            android:name=".view.DetalleActivity"
+            android:exported="false"
+            android:label="@string/title_activity_detalle"
+            android:theme="@style/Theme.Fliks" />
+
+        <activity
+            android:name=".view.PerfilActivity"
+            android:exported="false"
+            android:label="@string/title_activity_perfil"
+            android:theme="@style/Theme.Fliks" />
+
         <service
             android:name=".service.MovieReminderService"
             android:enabled="true"
@@ -80,6 +65,7 @@
             android:name=".service.MovieReminderReceiver"
             android:enabled="true"
             android:exported="false" />
+
     </application>
 
 </manifest>
